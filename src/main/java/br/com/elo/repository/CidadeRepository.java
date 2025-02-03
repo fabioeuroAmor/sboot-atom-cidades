@@ -16,7 +16,7 @@ public interface CidadeRepository extends JpaRepository<Cidade, Integer> {
     Cidade search(@Param("searchTerm") String searchTerm);
 
     /* Query JPQL */
-    @Query("SELECT c FROM Cidade c WHERE c.dcNome = :dcNome")
+    @Query("SELECT c FROM Cidade c WHERE UPPER(c.dcNome) = UPPER(:dcNome)")
     Cidade buscarPorNome(@Param("dcNome") String dcNome);
 
     /* Query NATIVA */
