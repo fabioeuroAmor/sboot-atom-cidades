@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -20,6 +21,8 @@ public class CidadeService {
     private final CidadeRepository cidadeRepository;
 
     private  final ModelMapper modelMapper;
+
+    private final RestTemplate restTemplate;
 
     public CidadeDto inserirCidade(CidadeDto cidadeDto){
         CidadeDto cidadePers = null;
