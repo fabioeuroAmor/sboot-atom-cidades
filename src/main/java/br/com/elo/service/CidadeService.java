@@ -1,4 +1,4 @@
-package br.com.elo.servece;
+package br.com.elo.service;
 
 import br.com.elo.domain.Cidade;
 import br.com.elo.dto.CidadeDto;
@@ -11,6 +11,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -21,11 +24,12 @@ public class CidadeService {
 
     private final CidadeRepository cidadeRepository;
 
+    private  final ModelMapper modelMapper;
+
     public CidadeDto inserirCidade(CidadeDto cidadeDto){
         CidadeDto cidadePers = null;
        try {
 
-           ModelMapper modelMapper = new ModelMapper();
            Cidade cidade   = modelMapper.map(cidadeDto, Cidade.class);
            cidade = cidadeRepository.save(cidade);
            cidadePers = modelMapper.map(cidade, CidadeDto.class);
@@ -35,6 +39,30 @@ public class CidadeService {
            throw new BDException(e.getMessage());
        }
       return cidadePers;
+    }
+
+    public CidadeDto buscarPorNome(String dcNome){
+        CidadeDto cidadePers = null;
+        try {
+            Cidade cidadeBd = cidadeRepository.search(dcNome);
+            cidadePers = modelMapper.map(cidadeBd, CidadeDto.class);
+        }catch (Exception e){
+            log.error("Erro na camada de servico ao buscar cidade por nome: " + e.getMessage());
+            throw new BDException(e.getMessage());
+        }
+
+        return cidadePers;
+    }
+
+    public Integer deletePorId(Integer id){
+
+        try {
+         cidadeRepository.deleteById(id);
+        }catch (Exception e){
+            log.error("Erro na camada de servico ao buscar cidade por nome: " + e.getMessage());
+            throw new BDException(e.getMessage());
+        }
+         return id;
     }
 
 

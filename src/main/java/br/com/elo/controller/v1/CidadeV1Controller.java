@@ -3,15 +3,11 @@ package br.com.elo.controller.v1;
 
 import br.com.elo.dto.CidadeDto;
 import br.com.elo.json.Response;
-import br.com.elo.servece.CidadeService;
+import br.com.elo.service.CidadeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -45,6 +41,38 @@ public class CidadeV1Controller {
 
         }
         return  ResponseEntity.ok(response);
+    }
+
+    @GetMapping(value = "/{dcNome}")
+    public ResponseEntity<Response> buscaPorNome(@PathVariable("dcNome")  String dcNome){
+        Response response = new Response();
+        try {
+            response.setModeloRetorno(cidadeService.buscarPorNome(dcNome));
+            response.setMensagensRetorno("Cidade encontrada na base de dados!");
+        }catch (Exception e){
+            log.error("Erro ao consultar a cidade pelo nome: " + e.getMessage());
+            response.setMensagensRetorno(e.getMessage());
+            return  (ResponseEntity<Response>) ResponseEntity.status(500);
+        }
+
+        return  ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Response> deletePorId(@PathVariable("id") Integer id){
+        Response response = new Response();
+
+        try {
+            cidadeService.deletePorId(id);
+            response.setModeloRetorno(null);
+            response.setMensagensRetorno("A cidade deletada da base de dados com id: " + id);
+        }catch (Exception e){
+            log.error("Erro ao consultar a cidade pelo nome: " + e.getMessage());
+            response.setMensagensRetorno(e.getMessage());
+            return  (ResponseEntity<Response>) ResponseEntity.status(500);
+        }
+
+        return ResponseEntity.ok(response);
     }
 
 
